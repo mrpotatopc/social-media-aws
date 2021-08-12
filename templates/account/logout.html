@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n crispy_forms_tags %}
+{% load i18n %}
+{% load account socialaccount %}
+
+{% block head_title %}{% trans "Sign In" %}{% endblock %}
+{% block head %}
+  <link rel="stylesheet" href="{% static 'css/login.css' %}?{% now 'U' %}">
+{% endblock %}
+{% block content %}
+
+<div class="container mt-3 bg-light" id="login">
+<h1>{% trans "Sign out" %}</h1>
+<form class="login" method="POST" action="{% url 'account_logout' %}">
+  {% csrf_token %}
+  {% if redirect_field_value %}
+  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+  {% endif %}
+  <div class="container">
+
+    <button type="submit" class="submit">Logout</button>
+    <label>
+      <a href="{% url 'home:home' %}">
+        <button type="button" class="cancelbtn submit">Cancel</button>
+      </a>
+  </div>
+
+
+
+</form>
+
+
+</div>
+{% endblock %}

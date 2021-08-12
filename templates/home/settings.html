@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block head %}
+{% endblock %}
+
+{% block content %}
+<div class="container mt-3">
+    <div class="">
+      <form class="" action="{% url 'home:edituserava' %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="input-group">
+          <button class="btn btn-outline-secondary" type="submit" id="inputGroupFileAddon03">Change profile picture</button>
+          <input type="file" accept="image/png, image/gif, image/jpeg" class="form-control" id="inputGroupFile03" aria-describedby="inputGroupFileAddon03" aria-label="Upload" name="profilepic">
+        </div>
+      </form>
+    </div>
+    <div class="mt-3">
+      <form method="post" action="{% url 'home:editusername' %}">
+        {% csrf_token %}
+        <div class="input-group mb-3">
+          <button class="btn btn-outline-secondary" type="submit" id="inputGroupFileAddon03">Change username</button>
+          <input type="text" class="form-control" value="{% if user.user_name_set.all|first %}{% with user.user_name_set.all|first as u %}{{u.name}}{% endwith %}{% else %}{{user}}{% endif %}" aria-label="Text input with segmented dropdown button" name="username">
+        </div>
+      </form>
+    </div>
+    <div class="mt-3">
+      <form class="" action="{% url 'home:edituserpassword' %}" method="post">
+        {% csrf_token %}
+        <div class="input-group mb-3">
+          <button class="btn btn-outline-secondary" type="submit" id="inputGroupFileAddon03">Change password</button>
+          <input name="password" class="form-control" required="required" type="password" id="password" minlength="8" />
+          <input name="password_confirm" class="form-control" required="required" type="password" id="password_confirm" oninput="check(this)" minlength="8" />
+        </div>
+        <script language='javascript' type='text/javascript'>
+            function check(input) {
+                if (input.value != document.getElementById('password').value) {
+                    input.setCustomValidity('Password Must be Matching.');
+                } else {
+                    // input is valid -- reset the error message
+                    input.setCustomValidity('');
+                }
+            }
+        </script>
+      </form>
+    </div>
+</div>
+{% endblock %}

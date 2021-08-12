@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n crispy_forms_tags %}
+{% load i18n %}
+{% load account socialaccount %}
+<!-- -->
+{% block head_title %}{% trans "Sign In" %}{% endblock %}
+{% block head %}
+  <link rel="stylesheet" href="{% static 'css/login.css' %}?{% now 'U' %}">
+{% endblock %}
+{% block header %}
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'account_signup' %}">signup</a>
+  </li>
+{% endblock %}
+{% block content %}
+
+<div class="container mt-3 bg-light" id="login">
+<h1>{% trans "Sign In" %}</h1>
+<form class="login" method="POST" action="{% url 'account_login' %}">
+  {% csrf_token %}
+  <div class="container">
+    <label for="uname"><b>Username or Email</b></label>
+    <input type="text" placeholder="Enter Username" name="login" required>
+
+    <label for="psw"><b>Password</b></label>
+    <input type="password" placeholder="Enter Password" name="password" required>
+
+    <button type="submit" class="submit">Login</button>
+    <label>
+      <input type="checkbox" checked="checked" name="remember"> Remember me
+    </label>
+  </div>
+  {% if form.errors %}
+      {% for field in form %}
+          {% for error in field.errors %}
+              <div class="alert alert-error">
+                  <strong>{{ error|escape }}</strong>
+              </div>
+          {% endfor %}
+      {% endfor %}
+      {% for error in form.non_field_errors %}
+          <div class="alert alert-error">
+              <strong>{{ error|escape }}</strong>
+          </div>
+      {% endfor %}
+  {% endif %}
+  <div class="container" >
+    <a href="{% url 'account_signup' %}">dont have account yet?</a><br>
+    <a class="button secondaryAction" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
+    <a href="{% url 'home:home' %}">
+      <button type="button" class="cancelbtn submit">Cancel</button>
+    </a>
+
+  </div>
+
+</form>
+
+
+</div>
+{% endblock %}

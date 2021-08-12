@@ -1,0 +1,15 @@
+
+input{
+  border-radius: 7px;
+  border-width: 1px;
+}
+textarea{
+  border-radius: 7px;
+}
+.inl{
+  display: inline-block;
+}
+textarea{
+  width:100%;
+  resize: none;
+}

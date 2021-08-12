@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n crispy_forms_tags %}
+{% load i18n %}
+{% load account socialaccount %}
+<!-- -->
+{% block head_title %}{% trans "Sign In" %}{% endblock %}
+{% block head %}
+  <link rel="stylesheet" href="{% static 'css/login.css' %}?{% now 'U' %}">
+{% endblock %}
+{% block content %}
+
+<div class="container mt-3 bg-light" id="login">
+<h1>{% trans "Sign up" %}</h1>
+<form class="login" method="POST" action="{% url 'account_signup' %}">
+  {% csrf_token %}
+  <div class="container">
+    <input type="text" name="username" placeholder="Username" autofocus="autofocus" minlength="1" maxlength="150" required="" id="id_username">
+
+    <input type="email" name="email" placeholder="E-mail address" autocomplete="email" required id="id_email">
+
+    <input type="password" name="password1" placeholder="Password" required="" id="id_password1">
+
+    <input type="password" name="password2" placeholder="Password (again)" required="" id="id_password2">
+    {% if redirect_field_value %}
+    <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+    {% endif %}
+    <button type="submit" class="submit">sign up</button>
+  </div>
+  {% if form.errors %}
+      {% for field in form %}
+          {% for error in field.errors %}
+              <div class="alert alert-error">
+                  <strong>{{ error|escape }}</strong>
+              </div>
+          {% endfor %}
+      {% endfor %}
+      {% for error in form.non_field_errors %}
+          <div class="alert alert-error">
+              <strong>{{ error|escape }}</strong>
+          </div>
+      {% endfor %}
+  {% endif %}
+  <div class="container" >
+    <a href="{% url 'home:home' %}">
+      <button type="button" class="cancelbtn submit">Cancel</button>
+    </a>
+  </div>
+
+</form>
+
+
+</div>
+{% endblock %}

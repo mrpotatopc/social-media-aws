@@ -1,0 +1,31 @@
+
+.ava{
+
+  border-radius:100px;
+}
+.usrname{
+  margin-left: 15px;
+}
+.subbtn{
+  margin-left:5px;
+}
+.inl{
+  display: inline-block;
+}
+.userlink{
+  text-decoration: none;
+  color: black;
+}
+.avatar{
+  margin-bottom: 3rem;
+}
+.comment_txt{
+  margin-left: 15px;
+}
+.comment{
+  border-radius:100px;
+}
+video {
+  width: 100%;
+  height: auto;
+}

@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/post.css' %}?{% now 'U' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-inner">
+      {% for Post_image in Post_images %}
+        <div class="carousel-item {% if forloop.counter == 1 %}active{% endif %} ">
+          <img src="{{Post_image.image_max.url}}" class="d-block w-100" alt="...">
+        </div>
+      {% endfor %}
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
+
+  <h1>{{post.title}}</h1><br>
+  <p style="white-space: pre-wrap;" >{{post.text}}</p><br>
+  {% for video in videos %}
+      <video src="{{video.video.url}}" class="video mb-1" controls>
+
+      </video>
+  {% endfor %}
+  {% if post.author.user_image_set.all|first %}
+    {% with post.author.user_image_set.all|first as  user_image %}
+
+    <div class="avatar">
+      <a href="{% url 'home:user' post.author_id %}"class="userlink">
+        <img src="{{ user_image.image_medium.url }}" width="40" class="ava">
+        <h4 class="inl usrname">{{post.author.username}}</h4>
+      </a>
+      {% if is_sub == True %}
+       <a href="{% url 'home:unsubscribe' sub_id %}" onclick="this.disabled=true;" class="btn btn-danger subbtn" >unsubscribe</a>
+      {% else %}
+        <a href="{% url 'home:subscribe'  post.author_id  %} " onclick="this.disabled=true;" class="btn btn-secondary subbtn">subscribe</a>
+      {% endif %}
+    </div>
+    {% endwith %}
+  {% else %}
+    <div class="avatar">
+      <a href="{% url 'home:user' post.author_id %}"class="userlink">
+        <img src="{% static '/replacement-imgs/avatar.png' %}" width="40"   class="ava" >
+        <h4 class="inl usrname">{{post.author.username}}</h4>
+      </a>
+      {% if is_sub == True %}
+       <a href="{% url 'home:unsubscribe' sub_id %}" onclick="this.disabled=true;" class="btn btn-danger subbtn" >unsubscribe</a>
+      {% else %}
+        <a href="{% url 'home:subscribe'  post.author_id  %} " onclick="this.disabled=true;" class="btn btn-secondary subbtn">subscribe</a>
+      {% endif %}
+    </div>
+  {% endif %}
+  {% if user == post.author %}
+    <a href="{% url 'home:postedit' post.id %}" class="btn btn-primary">Edit post</a>
+    <a href="{% url 'home:DeletePost' post.id %}" class="btn btn-danger">Delete post</a>
+  {% elif user.is_superuser %}
+    <a href="{% url 'home:postedit' post.id %}" class="btn btn-primary">Edit post</a>
+    <a href="{% url 'home:DeletePost' post.id %}" class="btn btn-danger">Delete post</a>
+  {% endif %}
+  <form class="" action="{% url 'home:createcomment' post.id %}" method="post">
+    {% csrf_token %}
+    <div class="input-group">
+      <button class="btn btn-outline-secondary" type="submit" id="button-addon1">Leave comment</button>
+      <textarea class="form-control" name="text" aria-label="With textarea"></textarea>
+    </div>
+  </form>
+
+</div>
+  {% for comment in comments %}
+    <div class="comment bg-light mb-3">
+        {% if comment.author.user_image_set.all|first %}
+          {% with comment.author.user_image_set.all|first as  user_image %}
+          <div class="comment_content mt-3">
+            <a href="{% url 'home:user' post.author_id %}"class="userlink">
+              <img src="{{ user_image.image_medium.url }}" width="40" class="ava">
+              <p class="inl ">{{comment.author.username}}</p>
+            </a><br>
+            <p class="inl comment_txt" style="white-space: pre-wrap;" >{{comment.text}}</p>
+          </div>
+          {% endwith %}
+        {% else %}
+          <div class="comment_content  mt-3">
+            <a href="{% url 'home:user' post.author_id %}"class="userlink">
+              <img src="{% static '/replacement-imgs/avatar.png' %}" width="40"   class="ava" >
+              <p class="inl ">{{comment.author.username}}</p>
+            </a><br>
+            <p class="inl comment_txt" style="white-space: pre-wrap;" >{{comment.text}}</p>
+          </div>
+        {% endif %}
+    </div>
+  {% endfor %}
+
+</div>
+
+
+{% endblock %}

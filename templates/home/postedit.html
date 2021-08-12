@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/postform.css' %}?{% now 'U' %}">
+{% endblock %}
+
+
+{% block content  %}
+<div class="container mt-3">
+  <form class="" action="{% url 'home:posteditconfirm' post.id %}" method="post" enctype="multipart/form-data">
+    <div class="form-control">
+      {% csrf_token %}
+      <label for="title">Post title: </label>
+      <input type="text" name="title" value="{{post.title}}"><br>
+      <textarea name="text" rows="9"  class="mt-1 text">
+        {{post.text}}
+      </textarea><br>
+      <div class="input-group mb-1">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="">images</span>
+        </div>
+        <input type="file" name="images" class="form-control" multiple accept="image/png, image/gif, image/jpeg"/>
+      </div>
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="">videos</span>
+        </div>
+        <input type="file" name="videos" class="form-control"   multiple accept="video/mp4, video/ogg, video/webm"/>
+      </div>
+      <button type="submit" name="button" class="btn btn-primary mt-1">submit</button>
+    </div>
+  </form>
+  {% for image in images %}
+  <div class="mt-3 mb-3">
+    <img src="{{ image.image_max.url }}" alt="" style="max-width:100%;">
+    {% if post.post_image_set.all|length != 1 %}
+      <a href="{% url 'home:deleteimage' image.id %}" class="btn btn-danger">Delete image</a>
+    {% endif %}
+  </div>
+  {% endfor %}
+  {% for video in videos %}
+  <div class="mt-3 mb-3">
+    <video  controls style="max-width:100%;">
+        <source src="{{ video.video.url }}" type="video/mp4" >
+    </video>
+    <a href="{% url 'home:deletevideo' video.id %}" class="btn btn-danger">Delete video</a>
+  </div>
+  {% endfor %}
+</div>
+
+{% endblock %}

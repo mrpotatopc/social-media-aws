@@ -1,0 +1,7 @@
+django
+django-user-messages
+django-allauth
+django-imagekit
+django-crispy-forms
+Pillow
+django_cleanup

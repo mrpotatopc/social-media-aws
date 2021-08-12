@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+<div class="container">
+  {% for myrecent in myrecents %}
+    {% if myrecent.recent == True %}
+      <div class="card mt-3">
+        <h5 class="card-header">{{myrecent.title}}</h5>
+        {% with myrecent.post_image_set.all|first as post_image %}
+          <img src="{{ post_image.image.url }}" class="card-img-top" alt="...">
+        {% endwith %}
+        <div class="card-body">
+          <p class="card-text"style="text-overflow: ellipsis;overflow: hidden;white-space: nowrap;">{{myrecent.text}}</p>
+          <a href="{% url 'home:post' myrecent.id %}" class="btn btn-primary">Read post</a>
+          {% if user == myrecent.author %}
+            <a href="{% url 'home:postedit' myrecent.id %}" class="btn btn-primary">Edit post</a>
+            <a href="{% url 'home:DeletePost' myrecent.id %}" class="btn btn-danger">Delete post</a>
+          {% elif user.is_superuser %}
+            <a href="{% url 'home:postedit' myrecent.id %}" class="btn btn-primary">Edit post</a>
+            <a href="{% url 'home:DeletePost' myrecent.id %}" class="btn btn-danger">Delete post</a>
+          {% endif %}
+        </div>
+      </div>
+    {% else %}
+    {% endif %}
+  {% endfor %}
+  {% for mysubpost in mysubposts %}
+    {% if mysubpost.recent == True %}
+      <div class="card mt-3">
+        <h5 class="card-header">{{mysubpost.title}}</h5>
+        {% with mysubpost.post_image_set.all|first as post_image %}
+          <img src="{{ post_image.image.url }}" class="card-img-top" alt="...">
+        {% endwith %}
+        <div class="card-body">
+          <p class="card-text"style="text-overflow: ellipsis;overflow: hidden;white-space: nowrap;">{{mysubpost.text}}</p>
+          <a href="{% url 'home:post' mysubpost.id %}" class="btn btn-primary">Read post</a>
+          {% if user == mysubpost.author %}
+            <a href="{% url 'home:postedit' mysubpost.id %}" class="btn btn-primary">Edit post</a>
+            <a href="{% url 'home:DeletePost' mysubpost.id %}" class="btn btn-danger">Delete post</a>
+          {% elif user.is_superuser %}
+            <a href="{% url 'home:postedit' mysubpost.id %}" class="btn btn-primary">Edit post</a>
+            <a href="{% url 'home:DeletePost' mysubpost.id %}" class="btn btn-danger">Delete post</a>
+          {% endif %}
+        </div>
+      </div>
+    {% else %}
+    {% endif %}
+  {% endfor %}
+  {% for Post in posts %}
+    <div class="card mt-3">
+      <h5 class="card-header">{{Post.title}}</h5>
+      {% with Post.post_image_set.all|first as post_image %}
+        <img src="{{ post_image.image.url }}" class="card-img-top" alt="...">
+      {% endwith %}
+      <div class="card-body">
+        <p class="card-text"style="text-overflow: ellipsis;overflow: hidden;white-space: nowrap;">{{Post.text}}</p>
+        <a href="{% url 'home:post' Post.id %}" class="btn btn-primary">Read post</a>
+        {% if user == Post.author %}
+          <a href="{% url 'home:postedit' Post.id %}" class="btn btn-primary">Edit post</a>
+          <a href="{% url 'home:DeletePost' Post.id %}" class="btn btn-danger">Delete post</a>
+        {% elif user.is_superuser %}
+          <a href="{% url 'home:postedit' Post.id %}" class="btn btn-primary">Edit post</a>
+          <a href="{% url 'home:DeletePost' Post.id %}" class="btn btn-danger">Delete post</a>
+        {% endif %}
+      </div>
+    </div>
+  {% endfor %}
+</div>
+
+{% endblock %}

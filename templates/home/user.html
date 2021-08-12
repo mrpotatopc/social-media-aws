@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block head %}
+  <link rel="stylesheet" href="{% static 'css/user.css' %}?{% now 'U' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container mt-3">
+  {% if User.user_image_set.all|first %}
+    {% with User.user_image_set.all|first as  user_image %}
+    <div class="avatar">
+      <img src="{{ user_image.image_medium.url }}" width="40" class="ava">
+      {% if User.user_name_set.all|first %}
+        {% with User.user_name_set.all|first as u %}
+          <h4 class="inl usrname">{{u.name}}</h4>
+        {% endwith %}
+      {% else %}
+        <h4 class="inl usrname">{{User.username}}</h4>
+      {% endif %}
+      {% if is_sub == True %}
+       <a href="{% url 'home:unsubscribe' sub_id %}" onclick="this.disabled=true;" class="btn btn-danger subbtn" >unsubscribe</a>
+      {% else %}
+        <a href="{% url 'home:subscribe'  User.id  %} " onclick="this.disabled=true;" class="btn btn-secondary subbtn">subscribe</a>
+      {% endif %}
+      {% if user == User %}
+        <div class="dropdown inl">
+          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false"></button>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+            <li><a class="dropdown-item" href="{% url 'home:subscriptions'  %}">my subscriptions</a></li>
+            <li><a class="dropdown-item" href="{% url 'home:subscribers'  %}">my subscribers</a></li>
+            <li><a class="dropdown-item" href="{% url 'home:settings' %}">Settings</a></li>
+          </ul>
+        </div>
+      {% endif %}
+    </div>
+    {% endwith %}
+  {% else %}
+    <div class="avatar">
+      <img src="{% static '/replacement-imgs/avatar.png' %}" width="40"   class="ava" >
+      {% if User.user_name_set.all|first %}
+        {% with User.user_name_set.all|first as u %}
+          <h4 class="inl usrname">{{u.name}}</h4>
+        {% endwith %}
+      {% else %}
+        <h4 class="inl usrname">{{User.username}}</h4>
+      {% endif %}
+      {% if is_sub == True %}
+       <a href="{% url 'home:unsubscribe' sub_id %}" onclick="this.disabled=true;" class="btn btn-danger subbtn" >unsubscribe</a>
+      {% else %}
+        <a href="{% url 'home:subscribe'  User.id  %} " onclick="this.disabled=true;" class="btn btn-secondary subbtn">subscribe</a>
+      {% endif %}
+      {% if user == User %}
+        <div class="dropdown inl">
+          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false"></button>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+            <li><a class="dropdown-item" href="{% url 'home:subscriptions'  %}">my subscriptions</a></li>
+            <li><a class="dropdown-item" href="{% url 'home:subscribers'  %}">my subscribers</a></li>
+            <li><a class="dropdown-item" href="{% url 'home:settings' %}">Settings</a></li>
+          </ul>
+        </div>
+      {% endif %}
+    </div>
+  {% endif %}
+  {% if posts %}
+    {% for post in posts %}
+      <div class="card mt-3">
+        <h5 class="card-header">{{post.title}}</h5>
+        {% with post.post_image_set.all|first as post_image %}
+          <img src="{{ post_image.image.url }}" class="card-img-top" alt="...">
+        {% endwith %}
+        <div class="card-body">
+          <p class="card-text"style="text-overflow: ellipsis;overflow: hidden;white-space: nowrap;">{{post.text}}</p>
+          <a href="{% url 'home:post' post.id %}" class="btn btn-primary">Read post</a>
+          {% if user == myrecent.author %}
+            <a href="{% url 'home:DeletePost' post.id %}" class="btn btn-danger">Delete post</a>
+          {% elif user.is_superuser %}
+            <a href="{% url 'home:DeletePost' post.id %}" class="btn btn-danger">Delete post</a>
+          {% endif %}
+        </div>
+      </div>
+    {% endfor %}
+  {% else %}
+  <div class="card mt-3">
+    <h5 class="card-header no-post-header">there are no posts</h5>
+  </div>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

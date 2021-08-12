@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block head %}
+  <link rel="stylesheet" href="{% static 'css/userlist.css' %}?{% now 'U' %}">
+{% endblock %}
+
+
+{% block content %}
+<div class="container">
+  {% for subscription in subscriptions %}
+    <div class="usr">
+      <a href="{% url 'home:user' subscription.author.pk %}" class="userlink">
+        {% if subscription.author.user_image_set.all|first %}
+          {% with subscription.author.user_image_set.all|first as  user_image %}
+          <div class="avatar mt-3">
+            <img src="{{ user_image.image_medium.url }}" width="40" class="ava">
+            {% if subscription.author.user_name_set.all|first %}
+              {% with subscription.author.user_name_set.all|first as u %}
+                <h4 class="inl usrname">{{u.name}}</h4>
+              {% endwith %}
+            {% else %}
+              <h4 class="inl usrname">{{subscription.author.username}}</h4>
+            {% endif %}
+          </div>
+          {% endwith %}
+        {% else %}
+          <div class="avatar  mt-3">
+            <img src="{% static '/replacement-imgs/avatar.png' %}" width="40"   class="ava" >
+            <h4 class="inl usrname">{{subscription.author.username}}</h4>
+          </div>
+        {% endif %}
+      </a>
+    </div>
+  {% endfor %}
+</div>
+{% endblock %}
