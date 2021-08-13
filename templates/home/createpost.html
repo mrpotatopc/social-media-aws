@@ -13,13 +13,13 @@
     <div class="form-control">
       {% csrf_token %}
       <label for="title">Post title: </label>
-      <input type="text" name="title" value=""><br>
-      <textarea name="text" rows="9"  class="mt-1 text"></textarea><br>
+      <input type="text" name="title" value="" required><br>
+      <textarea name="text" rows="9"  class="mt-1 text" required></textarea><br>
       <div class="input-group mb-1">
         <div class="input-group-prepend">
           <span class="input-group-text" id="">images</span>
         </div>
-        <input type="file" name="images" class="form-control" multiple accept="image/png, image/gif, image/jpeg"/>
+        <input type="file" name="images" class="form-control" required multiple accept="image/png, image/gif, image/jpeg"/>
       </div>
       <div class="input-group">
         <div class="input-group-prepend">

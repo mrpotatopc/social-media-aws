@@ -11,7 +11,7 @@
         {% csrf_token %}
         <div class="input-group">
           <button class="btn btn-outline-secondary" type="submit" id="inputGroupFileAddon03">Change profile picture</button>
-          <input type="file" accept="image/png, image/gif, image/jpeg" class="form-control" id="inputGroupFile03" aria-describedby="inputGroupFileAddon03" aria-label="Upload" name="profilepic">
+          <input type="file" accept="image/png, image/gif, image/jpeg" class="form-control" required id="inputGroupFile03" aria-describedby="inputGroupFileAddon03" aria-label="Upload" name="profilepic">
         </div>
       </form>
     </div>
@@ -20,7 +20,7 @@
         {% csrf_token %}
         <div class="input-group mb-3">
           <button class="btn btn-outline-secondary" type="submit" id="inputGroupFileAddon03">Change username</button>
-          <input type="text" class="form-control" value="{% if user.user_name_set.all|first %}{% with user.user_name_set.all|first as u %}{{u.name}}{% endwith %}{% else %}{{user}}{% endif %}" aria-label="Text input with segmented dropdown button" name="username">
+          <input type="text" class="form-control" required value="{% if user.user_name_set.all|first %}{% with user.user_name_set.all|first as u %}{{u.name}}{% endwith %}{% else %}{{user}}{% endif %}" aria-label="Text input with segmented dropdown button" name="username">
         </div>
       </form>
     </div>
