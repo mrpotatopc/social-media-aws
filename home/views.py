@@ -3,6 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.models import User
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.views.generic import TemplateView,DetailView,ListView,View
+import time
 from django.contrib.auth.mixins import PermissionRequiredMixin,LoginRequiredMixin
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy,reverse
@@ -82,8 +83,12 @@ def PostDetailView(request,id):
         'videos':video,
 
     }
+    try:
+        return render(request, 'home/post.html',context)
+    except ValueError:
+        time.sleep(2)
+        return redirect(reverse('home:post', args=[Post.id]))
 
-    return render(request, 'home/post.html',context)
 
 class SubscriptionListView(LoginRequiredMixin,ListView):
     model = subscription
@@ -196,6 +201,7 @@ def createpost(request):
             usr_id = usr.id
             print(usr,usr_id)
             api.info(usr_id, not_txt ,meta={'url': post_url,})
+
 
         return redirect(reverse('home:post', args=[po.id]))
 
