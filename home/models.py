@@ -34,7 +34,7 @@ class user_image(models.Model):
 class post_image(models.Model):
     post = models.ForeignKey(post, on_delete=models.CASCADE)
     image = models.ImageField(upload_to="images")
-
+    image_medium = ImageSpecField(source="image",processors=[ResizeToFill(640,333)],format='JPEG',options={'quality':100})
     image_max = ImageSpecField(source="image",processors=[ResizeToFill(1920,1080)],format='JPEG',options={'quality':100})
 
 class post_comment(models.Model):

@@ -9,7 +9,7 @@
       <div class="card mt-3">
         <h5 class="card-header">{{myrecent.title}}</h5>
         {% with myrecent.post_image_set.all|first as post_image %}
-          <img src="{{ post_image.image.url }}" class="card-img-top" alt="...">
+          <img src="{{ post_image.image_medium.url }}" class="card-img-top" alt="...">
         {% endwith %}
         <div class="card-body">
           <p class="card-text"style="text-overflow: ellipsis;overflow: hidden;white-space: nowrap;">{{myrecent.text}}</p>
@@ -31,7 +31,7 @@
       <div class="card mt-3">
         <h5 class="card-header">{{mysubpost.title}}</h5>
         {% with mysubpost.post_image_set.all|first as post_image %}
-          <img src="{{ post_image.image.url }}" class="card-img-top" alt="...">
+          <img src="{{ post_image.image_medium.url }}" class="card-img-top" alt="...">
         {% endwith %}
         <div class="card-body">
           <p class="card-text"style="text-overflow: ellipsis;overflow: hidden;white-space: nowrap;">{{mysubpost.text}}</p>
@@ -52,7 +52,7 @@
     <div class="card mt-3">
       <h5 class="card-header">{{Post.title}}</h5>
       {% with Post.post_image_set.all|first as post_image %}
-        <img src="{{ post_image.image.url }}" class="card-img-top" alt="...">
+        <img src="{{ post_image.image_medium.url }}" class="card-img-top" alt="...">
       {% endwith %}
       <div class="card-body">
         <p class="card-text"style="text-overflow: ellipsis;overflow: hidden;white-space: nowrap;">{{Post.text}}</p>

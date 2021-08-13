@@ -52,8 +52,11 @@ def HomePageView(request):
         'posts':Post,
 
     }
-
-    return render(request, 'home/home.html',context)
+    try:
+        return render(request, 'home/home.html',context)
+    except ValueError:
+        time.sleep(2)
+        return render(request, 'home/home.html',context)
 
 def PostDetailView(request,id):
     Post = post.objects.get(id=id)
