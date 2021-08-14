@@ -40,8 +40,19 @@
     <div class="avatar">
       <a href="{% url 'home:user' post.author_id %}"class="userlink">
         <img src="{{ user_image.image_medium.url }}" width="40" class="ava">
-        <h4 class="inl usrname">{{post.author.username}}</h4>
+        {% if post.author.user_name_set.all|first %}
+          {% with post.author.user_name_set.all|first as u %}
+            <h4 class="inl usrname">{{u.name}}</h4>
+          {% endwith %}
+        {% else %}
+          <h4 class="inl usrname">{{User.username}}</h4>
+        {% endif %}
       </a>
+      {% if post.author.user_donate_link_set.all|first %}
+        {% with post.author.user_donate_link_set.all|first as u %}
+          <a href="{{u.link}}" onclick="this.disabled=true;" class="btn btn-danger subbtn" >donate</a>
+        {% endwith %}
+      {% endif %}
       {% if is_sub == True %}
        <a href="{% url 'home:unsubscribe' sub_id %}" onclick="this.disabled=true;" class="btn btn-danger subbtn" >unsubscribe</a>
       {% else %}
@@ -53,8 +64,19 @@
     <div class="avatar">
       <a href="{% url 'home:user' post.author_id %}"class="userlink">
         <img src="{% static '/replacement-imgs/avatar.png' %}" width="40"   class="ava" >
-        <h4 class="inl usrname">{{post.author.username}}</h4>
+        {% if post.author.user_name_set.all|first %}
+          {% with post.author.user_name_set.all|first as u %}
+            <h4 class="inl usrname">{{u.name}}</h4>
+          {% endwith %}
+        {% else %}
+          <h4 class="inl usrname">{{User.username}}</h4>
+        {% endif %}
       </a>
+      {% if post.author.user_donate_link_set.all|first %}
+        {% with post.author.user_donate_link_set.all|first as u %}
+          <a href="{{u.link}}" onclick="this.disabled=true;" class="btn btn-danger subbtn" >donate</a>
+        {% endwith %}
+      {% endif %}
       {% if is_sub == True %}
        <a href="{% url 'home:unsubscribe' sub_id %}" onclick="this.disabled=true;" class="btn btn-danger subbtn" >unsubscribe</a>
       {% else %}
@@ -69,7 +91,7 @@
     <a href="{% url 'home:postedit' post.id %}" class="btn btn-primary">Edit post</a>
     <a href="{% url 'home:DeletePost' post.id %}" class="btn btn-danger">Delete post</a>
   {% endif %}
-  <form class="" action="{% url 'home:createcomment' post.id %}" method="post">
+  <form class="mt-3" action="{% url 'home:createcomment' post.id %}" method="post">
     {% csrf_token %}
     <div class="input-group">
       <button class="btn btn-outline-secondary" type="submit" id="button-addon1">Leave comment</button>

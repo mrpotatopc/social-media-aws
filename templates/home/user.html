@@ -18,6 +18,11 @@
       {% else %}
         <h4 class="inl usrname">{{User.username}}</h4>
       {% endif %}
+      {% if User.user_donate_link_set.all|first %}
+        {% with User.user_donate_link_set.all|first as u %}
+          <a href="{{u.link}}" onclick="this.disabled=true;" class="btn btn-danger subbtn" >donate</a>
+        {% endwith %}
+      {% endif %}
       {% if is_sub == True %}
        <a href="{% url 'home:unsubscribe' sub_id %}" onclick="this.disabled=true;" class="btn btn-danger subbtn" >unsubscribe</a>
       {% else %}
@@ -44,6 +49,11 @@
         {% endwith %}
       {% else %}
         <h4 class="inl usrname">{{User.username}}</h4>
+      {% endif %}
+      {% if User.user_donate_link_set.all|first %}
+        {% with User.user_donate_link_set.all|first as u %}
+          <a href="{{u.link}}" onclick="this.disabled=true;" class="btn btn-danger subbtn" >donate</a>
+        {% endwith %}
       {% endif %}
       {% if is_sub == True %}
        <a href="{% url 'home:unsubscribe' sub_id %}" onclick="this.disabled=true;" class="btn btn-danger subbtn" >unsubscribe</a>

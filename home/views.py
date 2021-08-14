@@ -7,7 +7,7 @@ import time
 from django.contrib.auth.mixins import PermissionRequiredMixin,LoginRequiredMixin
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy,reverse
-from .models import subscription , post , post_image , user_image , post_comment , post_video ,user_name
+from .models import subscription , post , post_image , user_image , post_comment , post_video ,user_name, user_donate_link
 from django.utils import timezone
 from django.shortcuts import redirect
 from user_messages import api
@@ -253,6 +253,20 @@ def edituserava(request):
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 @login_required
+def edituserdonatelink(request):
+    if request.method == 'POST':
+        if user_donate_link.objects.filter(user=request.user).exists():
+            old_link = user_donate_link.objects.get(user=request.user)
+            old_linke.delete()
+            new_link = user_donate_link(user=request.user,link=request.POST['link'])
+            new_link.save()
+        else:
+            new_link = user_donate_link(user=request.user,link=request.POST['link'])
+            new_link.save()
+
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))    
+
+@login_required
 def edituserpassword(request):
     if request.method == 'POST':
         us = request.user.id
@@ -311,9 +325,10 @@ def deletevideo(request,id):
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
-class DonationPage(TemplateView):
+class DonationPage(LoginRequiredMixin,TemplateView):
     template_name = "home/donation.html"
 
+@login_required
 def Donate(request):
     if request.method == 'POST':
         amount = float(request.POST['amount'])
@@ -341,4 +356,7 @@ def Donate(request):
             currency='eur',
             description = description
         )
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        return redirect(reverse('home:thanks'))
+
+class thanks(TemplateView):
+    template_name = "home/thanks.html"

@@ -63,3 +63,7 @@ class post_video(models.Model):
 class user_name(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE)
     name = models.CharField(max_length=200)
+
+class user_donate_link(models.Model):
+    user = models.ForeignKey(User,on_delete=models.CASCADE)
+    link = models.URLField(max_length=400)
