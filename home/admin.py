@@ -2,7 +2,7 @@ from django.contrib import admin
 from . import models
 # Register your models here.
 
-from .models import post, post_image, post_video
+from .models import post, post_image, post_video,user_premium
 
 class post_imageAdmin(admin.StackedInline):
     model = post_image
@@ -29,3 +29,4 @@ admin.site.register(models.subscription)
 admin.site.register(models.post_comment)
 admin.site.register(models.user_image)
 admin.site.register(models.user_name)
+admin.site.register(models.user_premium)

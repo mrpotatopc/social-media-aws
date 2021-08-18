@@ -7,7 +7,7 @@ import time
 from django.contrib.auth.mixins import PermissionRequiredMixin,LoginRequiredMixin
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy,reverse
-from .models import subscription , post , post_image , user_image , post_comment , post_video ,user_name, user_donate_link
+from .models import subscription , post , post_image , user_image , post_comment , post_video ,user_name, user_donate_link, user_premium
 from django.utils import timezone
 from django.shortcuts import redirect
 from user_messages import api
@@ -264,7 +264,7 @@ def edituserdonatelink(request):
             new_link = user_donate_link(user=request.user,link=request.POST['link'])
             new_link.save()
 
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))    
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 @login_required
 def edituserpassword(request):
@@ -360,3 +360,35 @@ def Donate(request):
 
 class thanks(TemplateView):
     template_name = "home/thanks.html"
+
+class GetPremiumPage(TemplateView):
+    template_name = "home/getpremium.html"
+
+class alreadyHavePremium(TemplateView):
+    template_name = "home/alreadyhavepremium.html"
+
+def GetPremium(request):
+    if request.method == "POST":
+        amount = 300
+        description = "premium account"
+        user = request.user
+
+        if user_premium.objects.filter(user=user).exists():
+            return redirect(reverse('home:alreadyhavepremium'))
+        else:
+            pass
+
+        customer = stripe.Customer.create(
+            email = user.email,
+            name = user.username,
+            source = request.POST['stripeToken']
+        )
+        charge = stripe.Charge.create(
+            customer=customer,
+            amount=amount,
+            currency="eur",
+            description=description
+        )
+        premium = user_premium(user=user)
+        premium.save()
+        return redirect(reverse('home:settings'))

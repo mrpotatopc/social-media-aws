@@ -67,3 +67,6 @@ class user_name(models.Model):
 class user_donate_link(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE)
     link = models.URLField(max_length=400)
+
+class user_premium(models.Model):
+    user = models.ForeignKey(User,on_delete=models.CASCADE)

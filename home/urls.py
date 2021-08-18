@@ -28,6 +28,10 @@ urlpatterns = [
     path('donation/form/',views.DonationPage.as_view(),name="donate"),
     path('donation/confirm/',views.Donate,name="donateconfirm"),
     path('donation/thanks/',views.thanks.as_view(),name="thanks"),
-    path('change_donate_link/',views.edituserdonatelink,name="userdonatelink")
+    path('change_donate_link/',views.edituserdonatelink,name="userdonatelink"),
+    path('get_premium/',views.GetPremiumPage.as_view(),name="getpremium"),
+    path('get_premium/confirm/',views.GetPremium,name="getpremiumconfirm"),
+    path('get_premium/alreadyhavepremium/',views.alreadyHavePremium.as_view(),name="alreadyhavepremium"),
+
 
 ]

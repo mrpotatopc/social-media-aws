@@ -53,5 +53,14 @@
         </div>
       </form>
     </div>
+    <div class="mt-3">
+      <div class="input-group mb-3">
+        {% if user.user_premium_set.all|first %}
+          <a href="#" class="btn btn-outline-secondary">You already have premium!</a>
+        {% else %}
+          <a href="{% url 'home:getpremium' %}" class="btn btn-outline-secondary">Activate premium account!</a>
+        {% endif %}  
+      </div>
+    </div>
 </div>
 {% endblock %}
