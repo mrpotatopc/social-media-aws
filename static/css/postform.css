@@ -13,3 +13,7 @@ textarea{
   width:100%;
   resize: none;
 }
+
+#loader{
+  display: none;
+}

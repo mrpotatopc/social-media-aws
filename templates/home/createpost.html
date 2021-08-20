@@ -9,7 +9,18 @@
 
 {% block content  %}
 <div class="container mt-3">
-  <form class="" action="{% url 'home:createpost' %}" method="post" enctype="multipart/form-data">
+  <div class="modal-dialog modal-sm" id="loader">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="d-flex justify-content-center">
+          <div style="width: 5rem; height: 5rem;" class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+  <form class="" id="myform" action="{% url 'home:createpost' %}" method="post" enctype="multipart/form-data">
     <div class="form-control">
       {% csrf_token %}
       <label for="title">Post title: </label>
@@ -27,21 +38,19 @@
         </div>
         <input type="file" name="videos" class="form-control"   multiple accept="video/mp4, video/ogg, video/webm"/>
       </div>
-      <button type="submit" name="button" class="btn btn-primary mt-1" data-bs-toggle="modal" data-bs-target="#staticBackdrop" >submit</button>
+      <button type="submit" value="submit" name="button" class="btn btn-primary mt-1" >submit</button>
     </div>
   </form>
 </div>
-<div  class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-  <div class="modal-dialog modal-sm">
-    <div class="modal-content">
-      <div class="modal-body">
-        <div class="d-flex justify-content-center">
-          <div style="width: 5rem; height: 5rem;" class="spinner-border text-primary" role="status">
-            <span class="visually-hidden">Loading...</span>
-          </div>
-        </div>
-      </div>
-    </div>
-    </div>
-  </div>
+
+
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script>
+    $(document).ready(function(){
+      $("#myform").on("submit", function(){
+        $("#loader").fadeIn();
+      });//submit
+    });//document ready
+  </script>
 {% endblock %}
