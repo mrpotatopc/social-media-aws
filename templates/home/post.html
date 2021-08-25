@@ -29,6 +29,13 @@
 
   <h1>{{post.title}}</h1><br>
   <p style="white-space: pre-wrap;" >{{post.text}}</p><br>
+
+  <div class="links mb-1">
+    {% for link in links %}
+      <a class="mb-1" href="{{link.url}}">{{link.url}}</a>
+    {% endfor %}
+  </div>
+
   {% for video in videos %}
       <video src="{{video.video.url}}" class="video mb-1" controls>
 
@@ -98,8 +105,6 @@
       <textarea class="form-control" name="text" aria-label="With textarea"></textarea>
     </div>
   </form>
-
-</div>
   {% for comment in comments %}
     <div class="comment bg-light mb-3">
         {% if comment.author.user_image_set.all|first %}
@@ -123,8 +128,10 @@
         {% endif %}
     </div>
   {% endfor %}
-
 </div>
+
+
+
 
 
 {% endblock %}

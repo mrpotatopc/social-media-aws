@@ -2,7 +2,7 @@ from django.contrib import admin
 from . import models
 # Register your models here.
 
-from .models import post, post_image, post_video,user_premium
+from .models import post, post_image, post_video,user_premium,post_attached_link
 
 class post_imageAdmin(admin.StackedInline):
     model = post_image
@@ -10,9 +10,12 @@ class post_imageAdmin(admin.StackedInline):
 class post_videoAdmin(admin.StackedInline):
     model = post_video
 
+class post_attached_linkAdmin(admin.StackedInline):
+    model = post_attached_link
+
 @admin.register(post)
 class postAdmin(admin.ModelAdmin):
-    inlines = [post_imageAdmin, post_videoAdmin]
+    inlines = [post_imageAdmin, post_videoAdmin, post_attached_linkAdmin]
 
     class Meta:
        model = post
@@ -23,6 +26,10 @@ class post_imageAdmin(admin.ModelAdmin):
 
 @admin.register(post_video)
 class post_videoAdmin(admin.ModelAdmin):
+    pass
+
+@admin.register(post_attached_link)
+class post_attached_linkAdmin(admin.ModelAdmin):
     pass
 
 admin.site.register(models.subscription)

@@ -32,6 +32,7 @@ urlpatterns = [
     path('get_premium/',views.GetPremiumPage.as_view(),name="getpremium"),
     path('get_premium/confirm/',views.GetPremium,name="getpremiumconfirm"),
     path('get_premium/alreadyhavepremium/',views.alreadyHavePremium.as_view(),name="alreadyhavepremium"),
+    path('deletelink/<int:id>/',views.deletelink,name="deletelink")
 
 
 ]

@@ -7,7 +7,7 @@ import time
 from django.contrib.auth.mixins import PermissionRequiredMixin,LoginRequiredMixin
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy,reverse
-from .models import subscription , post , post_image , user_image , post_comment , post_video ,user_name, user_donate_link, user_premium
+from .models import subscription , post , post_image , user_image , post_comment , post_video ,user_name, user_donate_link, user_premium, post_attached_link
 from django.utils import timezone
 from django.shortcuts import redirect
 from user_messages import api
@@ -63,6 +63,7 @@ def PostDetailView(request,id):
     Post_image = post_image.objects.filter(post=Post)
     video = post_video.objects.filter(post=Post)
     comment = post_comment.objects.filter(post=Post)
+    link = post_attached_link.objects.filter(post=Post)
     author = Post.author
     usr = str(request.user)
     if usr != "AnonymousUser":
@@ -84,6 +85,7 @@ def PostDetailView(request,id):
         'sub_id':sub_id,
         'comments':comment,
         'videos':video,
+        'links':link
 
     }
     try:
@@ -176,6 +178,7 @@ def createpost(request):
         author = request.user
         title = request.POST['title']
         text = request.POST['text']
+        links = request.POST.getlist('att_link')
         images = request.FILES.getlist('images')
         videos = request.FILES.getlist('videos')
         po = post(author=author, title=title, text=text )
@@ -195,6 +198,18 @@ def createpost(request):
                 video=video
             )
             video.save()
+
+        for link in links:
+            #check if there is link or its just empty field
+            if link == "":
+                pass
+            else:
+                link = post_attached_link(
+                    post=po,
+                    url=link
+                )
+                link.save()
+
 
         query = subscription.objects.filter(author=author)
         not_txt = str(author) + " added a new post " + '"' + str(title) + '"'
@@ -279,10 +294,12 @@ def PostEdit(request,id):
     p =  post.objects.get(id=id)
     image = post_image.objects.filter(post=p)
     video = post_video.objects.filter(post=p)
+    link = post_attached_link.objects.filter(post=p)
     context={
         'post':p,
         'images':image,
-        'videos':video
+        'videos':video,
+        'links':link
 
     }
     return render(request, 'home/postedit.html',context)
@@ -292,6 +309,7 @@ def PostEditConfirm(request,id):
         po = post.objects.get(id=id)
         title = request.POST['title']
         text = request.POST['text']
+        links = request.POST.getlist('att_link')
         images = request.FILES.getlist('images')
         videos = request.FILES.getlist('videos')
 
@@ -312,6 +330,17 @@ def PostEditConfirm(request,id):
                 video=video
             )
             video.save()
+
+        for link in links:
+            #check if there is link or its just empty field
+            if link == "":
+                pass
+            else:
+                link = post_attached_link(
+                    post=po,
+                    url=link
+                )
+                link.save()
         return redirect(reverse('home:post', args=[po.id]))
 
 def deleteimage(request,id):
@@ -392,3 +421,9 @@ def GetPremium(request):
         premium = user_premium(user=user)
         premium.save()
         return redirect(reverse('home:settings'))
+
+
+def deletelink(request,id):
+    link = post_attached_link.objects.get(id=id)
+    link.delete()
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

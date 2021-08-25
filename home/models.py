@@ -70,3 +70,7 @@ class user_donate_link(models.Model):
 
 class user_premium(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE)
+
+class post_attached_link(models.Model):
+    post = models.ForeignKey(post,on_delete=models.CASCADE)
+    url = models.URLField(max_length=400)    
