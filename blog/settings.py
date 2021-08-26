@@ -24,6 +24,7 @@ EMAIL_HOST_USER = 'andrejsdjangotestemail@gmail.com'
 EMAIL_HOST_PASSWORD = 'vhsv wran vzqt psbu' #past the key or password app here
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = 'noreply@andrejsdjangotest.xyz'
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-cqo^y%&)rg3t6!grp=ak#3iqhuvu8z89!-ycb!af910^h3-rul'
