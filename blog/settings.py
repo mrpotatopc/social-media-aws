@@ -21,10 +21,9 @@ MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'andrejsdjangotestemail@gmail.com'
-EMAIL_HOST_PASSWORD = 'zcnrbnzshclmcqci' #past the key or password app here
+EMAIL_HOST_PASSWORD = 'vhsv wran vzqt psbu' #past the key or password app here
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-DEFAULT_FROM_EMAIL = 'default from email'
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-cqo^y%&)rg3t6!grp=ak#3iqhuvu8z89!-ycb!af910^h3-rul'
@@ -38,7 +37,7 @@ ACCOUNT_AUTHENTICATION_METHOD = ('username_email')
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_USERNAME_REQUIRED = False
-
+ACCOUNT_EMAIL_SUBJECT_PREFIX = ('andrejsdjangotest.xyz ')
 # Application definition
 INSTALLED_APPS = [
     'user_messages',
@@ -156,7 +155,7 @@ LOGIN_REDIRECT_URL = '/'
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
-    BASE_DIR / 'static'
+    BASE_DIR / 'static',
 ]
 
 MEDIA_ROOT  = BASE_DIR / 'media'
