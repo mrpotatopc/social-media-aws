@@ -32,7 +32,9 @@ urlpatterns = [
     path('get_premium/',views.GetPremiumPage.as_view(),name="getpremium"),
     path('get_premium/confirm/',views.GetPremium,name="getpremiumconfirm"),
     path('get_premium/alreadyhavepremium/',views.alreadyHavePremium.as_view(),name="alreadyhavepremium"),
-    path('deletelink/<int:id>/',views.deletelink,name="deletelink")
-
-
+    path('deletelink/<int:id>/',views.deletelink,name="deletelink"),
+    path('reply_to_comment/<int:id>/',views.reply_to_comment,name="reply_to_comment"),
+    path('reply_to_reply/<int:id1>/<int:id2>/',views.reply_to_reply,name="reply_to_reply"),
+    path('delete_comment/<int:id>/',views.delete_comment,name="delete_comment"),
+    path('delete_reply/<int:id>/',views.delete_reply,name="delete_reply"),
 ]

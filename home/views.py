@@ -7,7 +7,7 @@ import time
 from django.contrib.auth.mixins import PermissionRequiredMixin,LoginRequiredMixin
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy,reverse
-from .models import subscription , post , post_image , user_image , post_comment , post_video ,user_name, user_donate_link, user_premium, post_attached_link
+from .models import subscription , post , post_image , user_image , post_comment , post_video ,user_name, user_donate_link, user_premium, post_attached_link, reply
 from django.utils import timezone
 from django.shortcuts import redirect
 from user_messages import api
@@ -164,10 +164,11 @@ def subscribe(request,id1):
     sub.save()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
-class PostDelete(LoginRequiredMixin,RedirectToPreviousMixin,DeleteView):
+class PostDelete(LoginRequiredMixin,DeleteView):
     model = post
     action = 'delete post'
     template_name = "home/deletepost.html"
+    success_url = "/"
 
 class PostCreateView(LoginRequiredMixin,TemplateView):
     template_name = "home/createpost.html"
@@ -200,7 +201,6 @@ def createpost(request):
             video.save()
 
         for link in links:
-            #check if there is link or its just empty field
             if link == "":
                 pass
             else:
@@ -390,12 +390,13 @@ def Donate(request):
 class thanks(TemplateView):
     template_name = "home/thanks.html"
 
-class GetPremiumPage(TemplateView):
+class GetPremiumPage(LoginRequiredMixin,TemplateView):
     template_name = "home/getpremium.html"
 
-class alreadyHavePremium(TemplateView):
+class alreadyHavePremium(LoginRequiredMixin,TemplateView):
     template_name = "home/alreadyhavepremium.html"
 
+@login_required
 def GetPremium(request):
     if request.method == "POST":
         amount = 300
@@ -422,8 +423,53 @@ def GetPremium(request):
         premium.save()
         return redirect(reverse('home:settings'))
 
-
+@login_required
 def deletelink(request,id):
     link = post_attached_link.objects.get(id=id)
     link.delete()
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+@login_required
+def reply_to_comment(request,id):
+    if request.method == "POST":
+        comment = post_comment.objects.get(id=id)
+        author = request.user
+        text = request.POST['text']
+        rep = reply(
+            parent_comment = comment,
+            author = author,
+            text = text
+        )
+        rep.save()
+
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+@login_required
+def reply_to_reply(request,id1,id2):
+    #maybe i just need to add parent_comment and then just reples to replies will have just a tag @
+    if request.method == "POST":
+        comment = post_comment.objects.get(id=id2)
+        rep = reply.objects.get(id=id1)
+        author = request.user
+        text = request.POST['text']
+        rep = reply(
+            parent_comment = comment,
+            parent_reply = rep,
+            author=author,
+            text=text
+        )
+        rep.save()
+
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+@login_required
+def delete_comment(request,id):
+    comment = post_comment.objects.get(id=id)
+    comment.delete()
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+@login_required
+def delete_reply(request,id):
+    rep = reply.objects.get(id=id)
+    rep.delete()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

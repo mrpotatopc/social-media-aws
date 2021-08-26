@@ -73,4 +73,10 @@ class user_premium(models.Model):
 
 class post_attached_link(models.Model):
     post = models.ForeignKey(post,on_delete=models.CASCADE)
-    url = models.URLField(max_length=400)    
+    url = models.URLField(max_length=400)
+
+class reply(models.Model):
+    parent_comment = models.ForeignKey(post_comment,on_delete=models.CASCADE,blank=True, null=True)
+    parent_reply = models.ForeignKey("self",on_delete=models.CASCADE,blank=True, null=True)
+    author = models.ForeignKey(User,on_delete=models.CASCADE)
+    text = models.TextField()

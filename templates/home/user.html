@@ -77,15 +77,17 @@
       <div class="card mt-3">
         <h5 class="card-header">{{post.title}}</h5>
         {% with post.post_image_set.all|first as post_image %}
-          <img src="{{ post_image.image.url }}" class="card-img-top" alt="...">
+          <img src="{{ post_image.image_medium.url }}" class="card-img-top" alt="...">
         {% endwith %}
         <div class="card-body">
           <p class="card-text"style="text-overflow: ellipsis;overflow: hidden;white-space: nowrap;">{{post.text}}</p>
           <a href="{% url 'home:post' post.id %}" class="btn btn-primary">Read post</a>
-          {% if user == myrecent.author %}
-            <a href="{% url 'home:DeletePost' post.id %}" class="btn btn-danger">Delete post</a>
+          {% if user == post.author %}
+            <a href="{% url 'home:postedit' post.id %}" class="btn btn-secondary">Edit post</a>
+            <a href="{% url 'home:DeletePost' post.id %}" class="btn btn-secondary">Delete post</a>
           {% elif user.is_superuser %}
-            <a href="{% url 'home:DeletePost' post.id %}" class="btn btn-danger">Delete post</a>
+            <a href="{% url 'home:postedit' post.id %}" class="btn btn-secondary">Edit post</a>
+            <a href="{% url 'home:DeletePost' post.id %}" class="btn btn-secondary">Delete post</a>
           {% endif %}
         </div>
       </div>

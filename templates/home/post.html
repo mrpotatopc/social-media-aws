@@ -32,7 +32,7 @@
 
   <div class="links mb-1">
     {% for link in links %}
-      <a class="mb-1" href="{{link.url}}">{{link.url}}</a>
+      <a class="mb-1" href="{{link.url}}">{{link.url}}</a><br>
     {% endfor %}
   </div>
 
@@ -92,11 +92,11 @@
     </div>
   {% endif %}
   {% if user == post.author %}
-    <a href="{% url 'home:postedit' post.id %}" class="btn btn-primary">Edit post</a>
-    <a href="{% url 'home:DeletePost' post.id %}" class="btn btn-danger">Delete post</a>
+    <a href="{% url 'home:postedit' post.id %}" class="btn btn-secondary">Edit post</a>
+    <a href="{% url 'home:DeletePost' post.id %}" class="btn btn-secondary">Delete post</a>
   {% elif user.is_superuser %}
-    <a href="{% url 'home:postedit' post.id %}" class="btn btn-primary">Edit post</a>
-    <a href="{% url 'home:DeletePost' post.id %}" class="btn btn-danger">Delete post</a>
+    <a href="{% url 'home:postedit' post.id %}" class="btn btn-secondary">Edit post</a>
+    <a href="{% url 'home:DeletePost' post.id %}" class="btn btn-secondary">Delete post</a>
   {% endif %}
   <form class="mt-3" action="{% url 'home:createcomment' post.id %}" method="post">
     {% csrf_token %}
@@ -112,21 +112,165 @@
           <div class="comment_content mt-3">
             <a href="{% url 'home:user' post.author_id %}"class="userlink">
               <img src="{{ user_image.image_medium.url }}" width="40" class="ava">
-              <p class="inl ">{{comment.author.username}}</p>
+              {% if comment.author.user_name_set.all|first %}
+               {% with comment.author.user_name_set.all|first as u %}
+                 <p class="inl ">{{u.name}}</p>
+               {% endwith %}
+              {% else %}
+                <p class="inl ">{{comment.author.username}}</p>
+              {% endif %}
             </a><br>
             <p class="inl comment_txt" style="white-space: pre-wrap;" >{{comment.text}}</p>
+            {% if user == comment.author %}
+               <a class="btn btn-secondary" style="float:right; border-radius:100px;" href="{% url 'home:delete_comment' comment.id %}">delete</a>
+            {% elif user.is_superuser %}
+               <a class="btn btn-secondary" style="float:right; border-radius:100px;" href="{% url 'home:delete_comment' comment.id  %}">delete</a>
+            {% endif %}
+            {% if user.is_authenticated %}
+            <button class="btn btn-secondary" style="float:right; border-radius:100px;" data-bs-toggle="dropdown" aria-expanded="false" >reply</button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+              <form class="" action="{% url 'home:reply_to_comment' comment.id %}" method="post">
+                {% csrf_token %}
+                <div class="input-group">
+                  <button class="btn btn-outline-secondary" type="submit" id="button-addon1">Leave comment</button>
+                  <textarea class="form-control" required name="text" aria-label="With textarea"></textarea>
+                </div>
+              </form>
+            </div>
+            {% else %}
+             <a class="btn btn-secondary" style="float:right; border-radius:100px;" href="{% url 'account_login' %}">reply</a>
+            {% endif %}
           </div>
           {% endwith %}
         {% else %}
           <div class="comment_content  mt-3">
             <a href="{% url 'home:user' post.author_id %}"class="userlink">
               <img src="{% static '/replacement-imgs/avatar.png' %}" width="40"   class="ava" >
-              <p class="inl ">{{comment.author.username}}</p>
+              {% if comment.author.user_name_set.all|first %}
+               {% with comment.author.user_name_set.all|first as u %}
+                 <p class="inl ">{{u.name}}</p>
+               {% endwith %}
+              {% else %}
+                <p class="inl ">{{comment.author.username}}</p>
+              {% endif %}
             </a><br>
             <p class="inl comment_txt" style="white-space: pre-wrap;" >{{comment.text}}</p>
+            {% if user == comment.author %}
+               <a class="btn btn-secondary" style="float:right; border-radius:100px;" href="{% url 'home:delete_comment' comment.id  %}">delete</a>
+            {% elif user.is_superuser %}
+               <a class="btn btn-secondary" style="float:right; border-radius:100px;" href="{% url 'home:delete_comment' comment.id  %}">delete</a>
+            {% endif %}
+            {% if user.is_authenticated %}
+            <button class="btn btn-secondary" style="float:right; border-radius:100px;" data-bs-toggle="dropdown" aria-expanded="false" >reply</button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+              <form class="" action="{% url 'home:reply_to_comment' comment.id %}" method="post">
+                {% csrf_token %}
+                <div class="input-group">
+                  <button class="btn btn-outline-secondary" type="submit" id="button-addon1">Leave comment</button>
+                  <textarea class="form-control" required name="text" aria-label="With textarea"></textarea>
+                </div>
+              </form>
+            </div>
+            {% else %}
+             <a class="btn btn-secondary" style="float:right; border-radius:100px;" href="{% url 'account_login' %}">reply</a>
+            {% endif %}
           </div>
         {% endif %}
     </div>
+     {% for comment in comment.reply_set.all %}
+       <div class="comment bg-light ms-3 mb-3">
+           {% if comment.author.user_image_set.all|first %}
+             {% with comment.author.user_image_set.all|first as  user_image %}
+             <div class="comment_content mt-3">
+               <a href="{% url 'home:user' post.author_id %}"class="userlink">
+                 <img src="{{ user_image.image_medium.url }}" width="40" class="ava">
+                 {% if comment.author.user_name_set.all|first %}
+                  {% with comment.author.user_name_set.all|first as u %}
+                    <p class="inl ">{{u.name}}</p>
+                  {% endwith %}
+                 {% else %}
+                   <p class="inl ">{{comment.author.username}}</p>
+                 {% endif %}
+               </a><br>
+               {% if comment.parent_reply %}
+                {% if comment.parent_reply.author.user_name_set.all|first %}
+                  {% with comment.parent_reply.author.user_name_set.all|first as u %}
+                    <p class="inl comment_txt" style="white-space: pre-wrap;" >@{{u.name}} {{comment.text}}</p>
+                  {% endwith %}
+                {% else %}
+                  <p class="inl comment_txt" style="white-space: pre-wrap;" >@{{comment.parent_reply.author.username}} {{comment.text}}</p>
+                {% endif %}
+               {% else %}
+                <p class="inl comment_txt" style="white-space: pre-wrap;" >{{comment.text}}</p>
+               {% endif %}
+               {% if user == comment.author %}
+                  <a class="btn btn-secondary" style="float:right; border-radius:100px;" href="{% url 'home:delete_reply' comment.id  %}">delete</a>
+               {% elif user.is_superuser %}
+                  <a class="btn btn-secondary" style="float:right; border-radius:100px;" href="{% url 'home:delete_reply' comment.id  %}">delete</a>
+               {% endif %}
+               {% if user.is_authenticated %}
+
+               <button class="btn btn-secondary" style="float:right; border-radius:100px;" data-bs-toggle="dropdown" aria-expanded="false" >reply</button>
+               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                 <form class="" action="{% url 'home:reply_to_reply' comment.id comment.parent_comment.id  %}" method="post">
+                   {% csrf_token %}
+                   <div class="input-group">
+                     <button class="btn btn-outline-secondary" type="submit" id="button-addon1">Leave comment</button>
+                     <textarea class="form-control" required name="text" aria-label="With textarea"></textarea>
+                   </div>
+                 </form>
+               </div>
+               {% else %}
+                <a class="btn btn-secondary" style="float:right; border-radius:100px;" href="{% url 'account_login' %}">reply</a>
+               {% endif %}
+             </div>
+             {% endwith %}
+           {% else %}
+             <div class="comment_content  mt-3">
+               <a href="{% url 'home:user' post.author_id %}"class="userlink">
+                 <img src="{% static '/replacement-imgs/avatar.png' %}" width="40"   class="ava" >
+                 {% if comment.author.user_name_set.all|first %}
+                  {% with comment.author.user_name_set.all|first as u %}
+                    <p class="inl ">{{u.name}}</p>
+                  {% endwith %}
+                 {% else %}
+                   <p class="inl ">{{comment.author.username}}</p>
+                 {% endif %}
+               </a><br>
+               {% if comment.parent_reply %}
+                {% if comment.parent_reply.author.user_name_set.all|first %}
+                  {% with comment.parent_reply.author.user_name_set.all|first as u %}
+                    <p class="inl comment_txt" style="white-space: pre-wrap;" >@{{u.name}} {{comment.text}}</p>
+                  {% endwith %}
+                {% else %}
+                  <p class="inl comment_txt" style="white-space: pre-wrap;" >@{{comment.parent_reply.author.username}}{{comment.text}}</p>
+                {% endif %}
+               {% else %}
+                <p class="inl comment_txt" style="white-space: pre-wrap;" >{{comment.text}}</p>
+               {% endif %}
+               {% if user == comment.author %}
+                  <a class="btn btn-secondary" style="float:right; border-radius:100px;" href="{% url 'home:delete_reply' comment.id  %}">delete</a>
+               {% elif user.is_superuser %}
+                  <a class="btn btn-secondary" style="float:right; border-radius:100px;" href="{% url 'home:delete_reply' comment.id  %}">delete</a>
+               {% endif %}
+               {% if user.is_authenticated %}
+               <button class="btn btn-secondary" style="float:right; border-radius:100px;" data-bs-toggle="dropdown" aria-expanded="false" >reply</button>
+               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                 <form class="" action="{% url 'home:reply_to_reply' comment.id comment.parent_comment.id  %}" method="post">
+                   {% csrf_token %}
+                   <div class="input-group">
+                     <button class="btn btn-outline-secondary" type="submit" id="button-addon1">Leave comment</button>
+                     <textarea class="form-control" required name="text" aria-label="With textarea"></textarea>
+                   </div>
+                 </form>
+               </div>
+               {% else %}
+                <a class="btn btn-secondary" style="float:right; border-radius:100px;" href="{% url 'account_login' %}">reply</a>
+               {% endif %}
+             </div>
+           {% endif %}
+       </div>
+     {% endfor %}
   {% endfor %}
 </div>
 
