@@ -7,7 +7,7 @@ import time
 from django.contrib.auth.mixins import PermissionRequiredMixin,LoginRequiredMixin
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy,reverse
-from .models import subscription , post , post_image , user_image , post_comment , post_video ,user_name, user_donate_link, user_premium, post_attached_link, reply
+from .models import subscription , post , post_image , user_image , post_comment , post_video ,user_name, user_donate_link, user_premium, post_attached_link, reply , report , report_reason
 from django.utils import timezone
 from django.shortcuts import redirect
 from user_messages import api
@@ -64,6 +64,7 @@ def PostDetailView(request,id):
     video = post_video.objects.filter(post=Post)
     comment = post_comment.objects.filter(post=Post)
     link = post_attached_link.objects.filter(post=Post)
+    reason = report_reason.objects.order_by('-id')
     author = Post.author
     usr = str(request.user)
     if usr != "AnonymousUser":
@@ -85,7 +86,8 @@ def PostDetailView(request,id):
         'sub_id':sub_id,
         'comments':comment,
         'videos':video,
-        'links':link
+        'links':link,
+        'reasons':reason
 
     }
     try:
@@ -124,6 +126,7 @@ class UsersListView(ListView):
 def UserDetailView(request,id):
     u = User.objects.get(id=id)
     Post = post.objects.filter(author=u)
+    reason = report_reason.objects.order_by('-id')
 
 
     usr = str(request.user)
@@ -143,7 +146,8 @@ def UserDetailView(request,id):
         'User':u,
         'posts':Post,
         'is_sub':is_sub,
-        'sub_id':sub_id
+        'sub_id':sub_id,
+        'reasons':reason
 
     }
 
@@ -180,25 +184,32 @@ def createpost(request):
         title = request.POST['title']
         text = request.POST['text']
         links = request.POST.getlist('att_link')
-        images = request.FILES.getlist('images')
-        videos = request.FILES.getlist('videos')
+        files = request.FILES.getlist('files')
         po = post(author=author, title=title, text=text )
 
         po.save()
 
-        for image in images:
-            photo = post_image(
-                post=po,
-                image=image,
-            )
-            photo.save()
+        for file in files:
+            #converts filename to string
+            f = str(file)
+            #image
+            if f.endswith(('.jpg','.jpeg','.jfif','.pjpeg','.pjp','.png','.webp')):
+                #debug print(str(file) + " - it is image")
+                photo = post_image(
+                    post=po,
+                    image=file,
+                )
+                photo.save()
+            #video
+            elif f.endswith(('ogg','mp4','webm')):
+                #debug print(str(file) + " - this is video")
+                video = post_video(
+                    post=po,
+                    video=file
+                )
+                video.save()
 
-        for video in videos:
-            video = post_video(
-                post=po,
-                video=video
-            )
-            video.save()
+
 
         for link in links:
             if link == "":
@@ -310,26 +321,31 @@ def PostEditConfirm(request,id):
         title = request.POST['title']
         text = request.POST['text']
         links = request.POST.getlist('att_link')
-        images = request.FILES.getlist('images')
-        videos = request.FILES.getlist('videos')
+        files = request.FILES.getlist('files')
 
         po.title = title
         po.text = text
         po.save()
 
-        for image in images:
-            photo = post_image(
-                post=po,
-                image=image,
-            )
-            photo.save()
-
-        for video in videos:
-            video = post_video(
-                post=po,
-                video=video
-            )
-            video.save()
+        for file in files:
+            #converts filename to string
+            f = str(file)
+            #image
+            if f.endswith(('.jpg','.jpeg','.jfif','.pjpeg','.pjp','.png','.webp')):
+                #debug print(str(file) + " - it is image")
+                photo = post_image(
+                    post=po,
+                    image=file,
+                )
+                photo.save()
+            #video
+            elif f.endswith(('ogg','mp4','webm')):
+                #debug print(str(file) + " - this is video")
+                video = post_video(
+                    post=po,
+                    video=file
+                )
+                video.save()
 
         for link in links:
             #check if there is link or its just empty field
@@ -473,3 +489,79 @@ def delete_reply(request,id):
     rep = reply.objects.get(id=id)
     rep.delete()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+@login_required
+def send_report_post(request,id):
+    if request.method == "POST":
+        po = post.objects.get(id=id)
+        reason = request.POST['reason']
+        details = request.POST['details']
+        rep = report(
+            post=po,
+            reason=reason,
+            details=details
+        )
+        rep.save()
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+@login_required
+def send_report_user(request,id):
+    if request.method == "POST":
+        user = User.objects.get(id=id)
+        reason = request.POST['reason']
+        details = request.POST['details']
+        rep = report(
+            user=user,
+            reason=reason,
+            details=details
+        )
+        rep.save()
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+@login_required
+def reports(request):
+    us = request.user
+    if us.is_superuser:
+        rep = report.objects.order_by('-id')
+        context={
+            "reps":rep
+        }
+        return render(request, 'home/reps.html',context)
+    else:
+        return render(request, 'home/not_su.html')
+
+@login_required
+def report_detail(request,id):
+    us = request.user
+    if us.is_superuser:
+        rep = report.objects.get(id=id)
+        context={
+            "rep":rep
+        }
+        return render(request, 'home/rep.html',context)
+    else:
+        return render(request, 'home/not_su.html')
+
+class ReportDelete(LoginRequiredMixin,DeleteView):
+    model = report
+    action = 'delete report'
+    template_name = "home/deletereport.html"
+    success_url = "/reports"
+
+class PostDeleterep(LoginRequiredMixin,DeleteView):
+    model = post
+    action = 'delete post'
+    template_name = "home/deletepostrep.html"
+    success_url = "/reports"
+
+class UserDeleterep(LoginRequiredMixin,DeleteView):
+    model = User
+    action = 'deleteuser'
+    template_name = "home/deleteuserrep.html"
+    success_url = "/reports"
+
+class UserDelete(LoginRequiredMixin,DeleteView):
+    model = User
+    action = 'deleteuser'
+    template_name = "home/deleteuser.html"
+    success_url = "/"

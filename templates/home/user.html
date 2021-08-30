@@ -28,6 +28,27 @@
       {% else %}
         <a href="{% url 'home:subscribe'  User.id  %} " onclick="this.disabled=true;" class="btn btn-secondary subbtn">subscribe</a>
       {% endif %}
+      <a class="btn btn-secondary" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+        Report user
+      </a>
+    <div class="collapse" id="collapseExample">
+      <div class="card card-body">
+        <form class="" action="{% url 'home:send_report_user' User.id %}" method="post">
+          {% csrf_token %}
+          <select class="form-select" name="reason" aria-label="Default select example">
+            <option value="none of the above" selected>none of the above</option>
+            {% for reason in reasons %}
+              <option value="{{reason.reason}}">{{reason.reason}}</option>
+            {% endfor %}
+          </select>
+          <div class="mb-3">
+            <label for="exampleFormControlTextarea1" class="form-label">report details</label>
+            <textarea class="form-control" name="details" id="exampleFormControlTextarea1" rows="3"> </textarea>
+          </div>
+          <button type="submit" class="btn btn-secondary" name="button">Report</button>
+        </form>
+      </div>
+    </div>
       {% if user == User %}
         <div class="dropdown inl">
           <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false"></button>
@@ -60,6 +81,27 @@
       {% else %}
         <a href="{% url 'home:subscribe'  User.id  %} " onclick="this.disabled=true;" class="btn btn-secondary subbtn">subscribe</a>
       {% endif %}
+      <a class="btn btn-secondary" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+        Report user
+      </a>
+    <div class="collapse" id="collapseExample">
+      <div class="card card-body">
+        <form class="" action="{% url 'home:send_report_user' User.id %}" method="post">
+          {% csrf_token %}
+          <select class="form-select" name="reason" aria-label="Default select example">
+            <option value="none of the above" selected>none of the above</option>
+            {% for reason in reasons %}
+              <option value="{{reason.reason}}">{{reason.reason}}</option>
+            {% endfor %}
+          </select>
+          <div class="mb-3">
+            <label for="exampleFormControlTextarea1" class="form-label">report details</label>
+            <textarea class="form-control" name="details" id="exampleFormControlTextarea1" rows="3"> </textarea>
+          </div>
+          <button type="submit" class="btn btn-secondary" name="button">Report</button>
+        </form>
+      </div>
+    </div>
       {% if user == User %}
         <div class="dropdown inl">
           <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false"></button>
@@ -70,6 +112,7 @@
           </ul>
         </div>
       {% endif %}
+
     </div>
   {% endif %}
   {% if posts %}

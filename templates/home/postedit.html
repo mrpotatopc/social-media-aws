@@ -36,18 +36,10 @@
       </div>
       <div class="input-group mb-1">
         <div class="input-group-prepend">
-          <span class="input-group-text" id="">images</span>
+          <span class="input-group-text" id="">media(images/videos)</span>
         </div>
-        <input type="file" name="images" class="form-control" multiple accept="image/png, image/gif, image/jpeg"/>
+        <input type="file" name="files" class="form-control" required multiple accept="image/png, image/gif, image/jpeg, video/mp4, video/ogg, video/webm "/>
       </div>
-      <div class="input-group">
-        <div class="input-group-prepend">
-          <span class="input-group-text" id="">videos</span>
-        </div>
-        <input type="file" name="videos" class="form-control"   multiple accept="video/mp4, video/ogg, video/webm"/>
-      </div>
-      <button type="submit" name="button" class="btn btn-primary mt-1" data-bs-toggle="modal" data-bs-target="#staticBackdrop">submit</button>
-    </div>
   </form>
   {% for link in links %}
     <div class="input-group mb-1">

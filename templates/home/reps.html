@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-3">
+  <div class="list-group">
+    {% for rep in reps %}
+      {% if rep.post %}
+        <a href="{% url 'home:report' rep.id %}" class="list-group-item list-group-item-action">Reported post: {{rep.post}} | Report reason: {{rep.reason}}</a>
+      {% elif rep.user %}
+        <a href="{% url 'home:report' rep.id %}" class="list-group-item list-group-item-action">Reported user: {% if rep.user.user_name_set.all|first %}{% with rep.user.user_name_set.all|first as u %}{{u.name}}{% endwith %}{% else %}{{rep.user.username}}{% endif %} | Report reasom: {{rep.reason}}</a>
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

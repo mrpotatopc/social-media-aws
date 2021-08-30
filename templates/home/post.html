@@ -52,7 +52,7 @@
             <h4 class="inl usrname">{{u.name}}</h4>
           {% endwith %}
         {% else %}
-          <h4 class="inl usrname">{{User.username}}</h4>
+          <h4 class="inl usrname">{{post.author.username}}</h4>
         {% endif %}
       </a>
       {% if post.author.user_donate_link_set.all|first %}
@@ -76,7 +76,7 @@
             <h4 class="inl usrname">{{u.name}}</h4>
           {% endwith %}
         {% else %}
-          <h4 class="inl usrname">{{User.username}}</h4>
+          <h4 class="inl usrname">{{post.author.username}}</h4>
         {% endif %}
       </a>
       {% if post.author.user_donate_link_set.all|first %}
@@ -91,6 +91,27 @@
       {% endif %}
     </div>
   {% endif %}
+    <a class="btn btn-secondary" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+      Report post
+    </a>
+  <div class="collapse" id="collapseExample">
+    <div class="card card-body">
+      <form class="" action="{% url 'home:send_report_post' post.id %}" method="post">
+        {% csrf_token %}
+        <select class="form-select" name="reason" aria-label="Default select example">
+          <option value="none of the above" selected>none of the above</option>
+          {% for reason in reasons %}
+            <option value="{{reason.reason}}">{{reason.reason}}</option>
+          {% endfor %}
+        </select>
+        <div class="mb-3">
+          <label for="exampleFormControlTextarea1" class="form-label">report details</label>
+          <textarea class="form-control" name="details" id="exampleFormControlTextarea1" rows="3"> </textarea>
+        </div>
+        <button type="submit" class="btn btn-secondary" name="button">Report</button>
+      </form>
+    </div>
+  </div>
   {% if user == post.author %}
     <a href="{% url 'home:postedit' post.id %}" class="btn btn-secondary">Edit post</a>
     <a href="{% url 'home:DeletePost' post.id %}" class="btn btn-secondary">Delete post</a>

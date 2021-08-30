@@ -80,3 +80,23 @@ class reply(models.Model):
     parent_reply = models.ForeignKey("self",on_delete=models.CASCADE,blank=True, null=True)
     author = models.ForeignKey(User,on_delete=models.CASCADE)
     text = models.TextField()
+
+
+class report_reason(models.Model):
+    reason = models.CharField(max_length=150)
+
+    def __str__(self):
+        return self.reason
+
+
+class report(models.Model):
+    post = models.ForeignKey(post,on_delete=models.CASCADE,blank=True,null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE,blank=True,null=True)
+    reason = models.CharField(max_length=150)
+    details = models.TextField()
+
+    def __str__(self):
+        if self.post:
+            return str(self.post) + " "+ str(self.reason)
+        else :
+            return str(self.user) + " "+ str(self.reason)

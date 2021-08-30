@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% if rep.post %}
+  <div class="container mt-3 bg-light">
+    Reported post: <a style="color:black;" href="{% url 'home:post' rep.post.id %}">{{rep.post}}</a><br>
+    Report reason: {{rep.reason}}<br>
+    {% if rep.details %}
+      Report details: <p style="white-space: pre-wrap;">{{rep.details}}</p>
+    {% endif %}
+    <br>
+    <div class="btn-group mb-3 mt-3" role="group" aria-label="Basic outlined example">
+      <a href="{% url 'home:deletereport' rep.id %}" type="button" class="btn btn-secondary">Delete report</a>
+      <a href="{% url 'home:deletepostrep' rep.post.id %}" type="button" class="btn btn-secondary">Delete post</a>
+    </div>
+  </div>
+{% elif rep.user %}
+  <div class="container mt-3 bg-light">
+    Reported user: <a style="color:black;" href="{% url 'home:user' rep.user.id %}">{% if rep.user.user_name_set.all|first %}{% with rep.user.user_name_set.all|first as u %}{{u.name}}{% endwith %}{% else %}{{rep.user.username}}{% endif %}</a><br>
+    Report reason: {{rep.reason}}<br>
+    {% if rep.details %}
+      Report details: <p style="white-space: pre-wrap;">{{rep.details}}</p>
+    {% endif %}
+    <br>
+    <div class="btn-group mb-3 mt-3" role="group" aria-label="Basic outlined example">
+      <a href="{% url 'home:deletereport' rep.id %}" type="button" class="btn btn-secondary">Delete report</a>
+      <a href="{% url 'home:deleteuserrep' rep.user.id %}" type="button" class="btn btn-secondary">Ban user</a>
+    </div>
+  </div>
+{% endif %}
+{% endblock %}

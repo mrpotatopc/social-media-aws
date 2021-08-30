@@ -37,4 +37,12 @@ urlpatterns = [
     path('reply_to_reply/<int:id1>/<int:id2>/',views.reply_to_reply,name="reply_to_reply"),
     path('delete_comment/<int:id>/',views.delete_comment,name="delete_comment"),
     path('delete_reply/<int:id>/',views.delete_reply,name="delete_reply"),
+    path('report/post/<int:id>/',views.send_report_post,name="send_report_post"),
+    path('report/user/<int:id>/',views.send_report_user,name="send_report_user"),
+    path('reports/',views.reports,name="reports"),
+    path('reports/<int:id>/',views.report_detail,name="report"),
+    path('reports/<int:pk>/delete/',views.ReportDelete.as_view(),name="deletereport"),
+    path('reports/<int:pk>/delete/post/',views.PostDeleterep.as_view(),name="deletepostrep"),
+    path('reports/<int:pk>/delete/user/',views.UserDeleterep.as_view(),name="deleteuserrep"),
+    path('delete/user/<int:pk>/',views.UserDelete.as_view(),name="deleteuser"),    
 ]

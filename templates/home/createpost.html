@@ -29,22 +29,16 @@
       <div class="links mb-1" style="border-color:black;border-style:solid;border-width:1px;border-radius:5px;">
         <p class="ms-1">attached links:</p>
         <div class="content" id="content">
-        
+
           <input type="url" class="ms-1" name="att_link"><br>
         </div>
         <button class="btn btn-primary mb-1 ms-1 mt-1" onclick="addField()" type="button" name="button">+</button>
       </div>
       <div class="input-group mb-1">
         <div class="input-group-prepend">
-          <span class="input-group-text" id="">images</span>
+          <span class="input-group-text" id="">media(images/videos)</span>
         </div>
-        <input type="file" name="images" class="form-control" required multiple accept="image/png, image/gif, image/jpeg"/>
-      </div>
-      <div class="input-group">
-        <div class="input-group-prepend">
-          <span class="input-group-text" id="">videos</span>
-        </div>
-        <input type="file" name="videos" class="form-control"   multiple accept="video/mp4, video/ogg, video/webm"/>
+        <input type="file" name="files" class="form-control" required multiple accept="image/png, image/gif, image/jpeg, video/mp4, video/ogg, video/webm "/>
       </div>
       <button type="submit" value="submit" name="button" class="btn btn-primary mt-1" >submit</button>
     </div>
