@@ -542,26 +542,65 @@ def report_detail(request,id):
     else:
         return render(request, 'home/not_su.html')
 
-class ReportDelete(LoginRequiredMixin,DeleteView):
-    model = report
-    action = 'delete report'
-    template_name = "home/deletereport.html"
-    success_url = "/reports"
+@login_required
+def ReportDelete(request,id):
+    us = request.user
+    if us.is_superuser:
+        rep = report.objects.get(id=id)
+        rep.delete()
+        api.info(us.id, "report is deleted")
+        return redirect(reverse('home:reports'))
+    else:
+        return render(request, 'home/not_su.html')
 
-class PostDeleterep(LoginRequiredMixin,DeleteView):
-    model = post
-    action = 'delete post'
-    template_name = "home/deletepostrep.html"
-    success_url = "/reports"
+@login_required
+def PostDeleterep(request,id):
+    us = request.user
+    if us.is_superuser:
+        id = id
+        context={
+            "id":id
+        }
+        return render(request, 'home/deletepostrep.html',context)
+    else:
+        return render(request, 'home/not_su.html')
 
-class UserDeleterep(LoginRequiredMixin,DeleteView):
-    model = User
-    action = 'deleteuser'
-    template_name = "home/deleteuserrep.html"
-    success_url = "/reports"
+@login_required
+def PostDeleteRepConfirm(request,id):
+    us = request.user
+    if us.is_superuser:
+        rep = post.objects.get(id=id)
+        rep.delete()
+        api.info(us.id, "reported post is deleted")
+        return redirect(reverse('home:reports'))
+    else:
+        return render(request, 'home/not_su.html')
+
+@login_required
+def UserDeleterep(request,id):
+    us = request.user
+    if us.is_superuser:
+        id = id
+        context={
+            "id":id
+        }
+        return render(request, 'home/deleteuserrep.html',context)
+    else:
+        return render(request, 'home/not_su.html')
+
+@login_required
+def UserDeleteRepConfirm(request,id):
+    us = request.user
+    if us.is_superuser:
+        rep = User.objects.get(id=id)
+        rep.delete()
+        if rep.username == us.username:
+            pass
+        else:
+            api.info(us.id, "reported user is deleted")
+        return redirect(reverse('home:reports'))
+    else:
+        return render(request, 'home/not_su.html')
 
 class UserDelete(LoginRequiredMixin,DeleteView):
-    model = User
-    action = 'deleteuser'
     template_name = "home/deleteuser.html"
-    success_url = "/"

@@ -2,17 +2,10 @@
 {% block title %}{{view.action}}{% endblock %}
 {% block content %}
 <div class="container mt-3">
-  <form action="." method="post">
-    {% csrf_token %}
+    <p>are you sure to delete post ?</p>
 
-    <p>are you sure to delete "{{object}}"?</p>
-
-    <input class="btn btn-danger" type="submit" value="confirm">
-
-    <a href="{% url 'home:reports' %}">
-    <button type="button" name="button" class="btn btn-outline-secondary btn-light">cancel</button>
-    </a>
-  </form>
+    <a class="btn btn-danger" href="{% url 'home:PostDeleteRepConfirm' id %}">Yes</a>
+    <a href="javascript:history.back()" class="btn btn-outline-secondary">No</a>
 
 </div>
 
