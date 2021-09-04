@@ -151,7 +151,11 @@ def UserDetailView(request,id):
 
     }
 
-    return render(request, 'home/user.html',context)
+    try:
+        return render(request, 'home/user.html',context)
+    except ValueError:
+        time.sleep(2)
+        return render(request, 'home/user.html',context)
 
 @login_required
 def unsubscribe(request,id):
@@ -620,5 +624,3 @@ def UserDeleteConfirm(request,id):
         return redirect(reverse('home:home'))
     else:
         return redirect(reverse('home:home'))
-
-            

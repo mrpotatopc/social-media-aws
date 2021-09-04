@@ -19,7 +19,7 @@
       <form method="post" action="{% url 'home:editusername' %}">
         {% csrf_token %}
         <div class="input-group mb-3">
-          <button class="btn btn-outline-secondary" type="submit" id="inputGroupFileAddon03">Change username</button>
+          <button class="btn btn-outline-secondary" onclick="this.disabled=true;" type="submit" id="inputGroupFileAddon03">Change username</button>
           <input type="text" class="form-control" required value="{% if user.user_name_set.all|first %}{% with user.user_name_set.all|first as u %}{{u.name}}{% endwith %}{% else %}{{user}}{% endif %}" aria-label="Text input with segmented dropdown button" name="username">
         </div>
       </form>
