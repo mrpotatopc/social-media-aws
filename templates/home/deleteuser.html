@@ -7,10 +7,10 @@
 
     <p>are you sure to delete your profile?</p>
 
-    <input class="btn btn-danger" type="submit" value="confirm">
+    <a href="{% url 'home:deleteuserconfirm' id %}" class="btn btn-outline-danger">Yes</a>
 
-    <a href="{% url 'home:home' %}">
-    <button type="button" name="button" class="btn btn-outline-secondary btn-light">cancel</button>
+    <a href="{% url 'home:settings' %}">
+    <button type="button" name="button" class="btn btn-outline-secondary btn-light">No</button>
     </a>
   </form>
 

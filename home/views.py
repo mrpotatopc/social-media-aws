@@ -602,5 +602,23 @@ def UserDeleteRepConfirm(request,id):
     else:
         return render(request, 'home/not_su.html')
 
-class UserDelete(LoginRequiredMixin,DeleteView):
-    template_name = "home/deleteuser.html"
+@login_required
+def UserDelete(request):
+    us = request.user
+
+    id = us.id
+    context={
+        "id":id
+    }
+    return render(request, 'home/deleteuser.html',context)
+
+def UserDeleteConfirm(request,id):
+    obj = User.objects.get(id=id)
+    us = request.user
+    if us.id == obj.id:
+        obj.delete()
+        return redirect(reverse('home:home'))
+    else:
+        return redirect(reverse('home:home'))
+
+            

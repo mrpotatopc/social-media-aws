@@ -46,5 +46,6 @@ urlpatterns = [
     path('reports/<int:id>/delete/post/confirm/',views.PostDeleteRepConfirm,name="PostDeleteRepConfirm"),
     path('reports/<int:id>/delete/user/',views.UserDeleterep,name="deleteuserrep"),
     path('reports/<int:id>/delete/user/confirm/',views.UserDeleteRepConfirm,name="UserDeleteRepConfirm"),
-    path('delete/user/<int:pk>/',views.UserDelete.as_view(),name="deleteuser"),
+    path('delete/user/',views.UserDelete,name="deleteuser"),
+    path('delete/user/confirm/<int:id>/',views.UserDeleteConfirm,name="deleteuserconfirm")
 ]
