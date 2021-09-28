@@ -624,3 +624,21 @@ def UserDeleteConfirm(request,id):
         return redirect(reverse('home:home'))
     else:
         return redirect(reverse('home:home'))
+
+def send_notification_page(request):
+    us = request.user
+    Us = User.objects.order_by('-id')
+    context = {
+        'Users':Us
+    }
+    if us.is_superuser:
+        return render(request, 'home/send_notif.html',context)
+    else:
+        return render(request,'home/not_su.html')
+
+def send_notification_confirm(request):
+    if request.method == 'POST':
+        text = request.POST['text']
+        user = request.POST['user']
+        api.info(user, text)
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

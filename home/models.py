@@ -100,3 +100,5 @@ class report(models.Model):
             return str(self.post) + " "+ str(self.reason)
         else :
             return str(self.user) + " "+ str(self.reason)
+
+      

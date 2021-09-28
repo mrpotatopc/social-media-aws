@@ -47,5 +47,7 @@ urlpatterns = [
     path('reports/<int:id>/delete/user/',views.UserDeleterep,name="deleteuserrep"),
     path('reports/<int:id>/delete/user/confirm/',views.UserDeleteRepConfirm,name="UserDeleteRepConfirm"),
     path('delete/user/',views.UserDelete,name="deleteuser"),
-    path('delete/user/confirm/<int:id>/',views.UserDeleteConfirm,name="deleteuserconfirm")
+    path('delete/user/confirm/<int:id>/',views.UserDeleteConfirm,name="deleteuserconfirm"),
+    path('notif/send/page/',views.send_notification_page,name="notif_page"),
+    path('notif/send/confirm/',views.send_notification_confirm,name="notif_send"),
 ]

@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+  <form class="" action="{% url 'home:notif_send' %}" method="post">
+    {% csrf_token %}
+    <select class="" name="user">
+      <option selected>choose user</option>
+      {% for Us in Users %}
+        <option value="{{Us.id}}">{{Us.username}}</option>
+      {% endfor %}
+      <textarea name="text" rows="8" cols="80"></textarea>
+      <button type="submit" name="button">ss</button>
+    </select>
+  </form>
+</div>
+{% endblock %}
